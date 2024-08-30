@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Registration and Price Update</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            margin-top: 20px;
+        }
+        .update-section {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">
+            <img src="s-logo.png" alt="Logo" width="30" height="30" class="d-inline-block align-top">
+            Scrappyfy
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="search.html">Sell</a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="#">Info</a>
+                </li> -->
+                <li class="nav-item">
+                    <a class="nav-link" href="register.html " target="_blank">Vendor Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="map.html" target="_blank" >Location</a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="#">Payment Status</a>
+                </li> -->
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Vendor Registration and Price Update</h1>
+        
+        <!-- Registration Form -->
+        <form id="registrationForm">
+            <h2>Register Vendor</h2>
+            <div class="form-group">
+                <label for="vendorName">Vendor Name:</label>
+                <input type="text" id="vendorName" required>
+            </div>
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <select id="location" required>
+                    <option value="">--Select Location--</option>
+                    <option value="1">BBSR</option>
+                    <option value="2">cuttack</option>
+                    <option value="3">puri</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="plasticPrice">Plastic Price ($ per kg):</label>
+                <input type="number" id="plasticPrice" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="glassPrice">Glass Price ($ per kg):</label>
+                <input type="number" id="glassPrice" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="metalPrice">Metal Price ($ per kg):</label>
+                <input type="number" id="metalPrice" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="paperPrice">Paper Price ($ per kg):</label>
+                <input type="number" id="paperPrice" step="0.01" required>
+            </div>
+            <button type="button" onclick="registerVendor()">Register Vendor</button>
+        </form>
+        
+        <!-- Update Prices Form -->
+        <div class="update-section">
+            <h2>Update Prices</h2>
+            <form id="updateForm">
+                <div class="form-group">
+                    <label for="updateVendorId">Vendor ID:</label>
+                    <input type="text" id="updateVendorId" required>
+                </div>
+                <div class="form-group">
+                    <label for="updatePlasticPrice">Plastic Price ($ per kg):</label>
+                    <input type="number" id="updatePlasticPrice" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="updateGlassPrice">Glass Price ($ per kg):</label>
+                    <input type="number" id="updateGlassPrice" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="updateMetalPrice">Metal Price ($ per kg):</label>
+                    <input type="number" id="updateMetalPrice" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="updatePaperPrice">Paper Price ($ per kg):</label>
+                    <input type="number" id="updatePaperPrice" step="0.01">
+                </div>
+                <button type="button" onclick="updatePrices()">Update Prices</button>
+            </form>
+        </div>
+
+        <div class="message" id="registrationMessage"></div>
+        <div class="message" id="updateMessage"></div>
+    </div>
+
+    <script>
+        const locations = {1: 'BBSR', 2: 'cuttack', 3: 'puri'};
+        let vendorIdCounter = 1;
+
+        function generateUniqueId() {
+            return 'vendor_' + vendorIdCounter++;
+        }
+
+        function registerVendor() {
+            const name = document.getElementById('vendorName').value;
+            const location = document.getElementById('location').value;
+            const plasticPrice = parseFloat(document.getElementById('plasticPrice').value);
+            const glassPrice = parseFloat(document.getElementById('glassPrice').value);
+            const metalPrice = parseFloat(document.getElementById('metalPrice').value);
+            const paperPrice = parseFloat(document.getElementById('paperPrice').value);
+
+            if (!name || !location || isNaN(plasticPrice) || isNaN(glassPrice) || isNaN(metalPrice) || isNaN(paperPrice)) {
+                alert('Please fill in all fields with valid numbers.');
+                return;
+            }
+
+            const vendorId = generateUniqueId();
+            const vendors = JSON.parse(localStorage.getItem('vendors')) || {};
+            vendors[vendorId] = {
+                name: name,
+                location: location,
+                prices: {
+                    plastic: plasticPrice,
+                    glass: glassPrice,
+                    metal: metalPrice,
+                    paper: paperPrice
+                }
+            };
+            localStorage.setItem('vendors', JSON.stringify(vendors));
+
+            document.getElementById('registrationForm').reset();
+            document.getElementById('registrationMessage').innerHTML = `
+                <p>Registration successful!</p>
+                <p>Your unique Vendor ID is: <strong>${vendorId}</strong></p>
+                <p><a href="search.html">Go to User Search</a></p>
+            `;
+        }
+
+        function updatePrices() {
+            const vendorId = document.getElementById('updateVendorId').value;
+            const plasticPrice = parseFloat(document.getElementById('updatePlasticPrice').value) || null;
+            const glassPrice = parseFloat(document.getElementById('updateGlassPrice').value) || null;
+            const metalPrice = parseFloat(document.getElementById('updateMetalPrice').value) || null;
+            const paperPrice = parseFloat(document.getElementById('updatePaperPrice').value) || null;
+
+            if (!vendorId) {
+                alert('Please enter Vendor ID.');
+                return;
+            }
+
+            const vendors = JSON.parse(localStorage.getItem('vendors')) || {};
+            if (!vendors[vendorId]) {
+                alert('Vendor ID not found.');
+                return;
+            }
+
+            if (plasticPrice !== null) vendors[vendorId].prices.plastic = plasticPrice;
+            if (glassPrice !== null) vendors[vendorId].prices.glass = glassPrice;
+            if (metalPrice !== null) vendors[vendorId].prices.metal = metalPrice;
+            if (paperPrice !== null) vendors[vendorId].prices.paper = paperPrice;
+
+            localStorage.setItem('vendors', JSON.stringify(vendors));
+
+            document.getElementById('updateForm').reset();
+            document.getElementById('updateMessage').innerHTML = `
+                <p>Prices updated successfully for Vendor ID: <strong>${vendorId}</strong></p>
+            `;
+        }
+    </script>
+     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

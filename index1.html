@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrap Object Detection Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #444;
+        }
+        #canvas {
+            border: 1px solid #ccc;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        #category-selection, #feedback-form {
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #category-selection label, #feedback-form label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        #categories {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #accept-button, #reject-button, #submit-feedback {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        #accept-button:hover, #reject-button:hover, #submit-feedback:hover {
+            background-color: #0056b3;
+        }
+        #feedback-form textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Scrap Object Detection Demo</h1>
+    <input type="file" id="image-upload" accept="image/*">
+    <br><br>
+    <canvas id="canvas"></canvas>
+    <p id="result"></p>
+    <p id="suggestions"></p>
+
+    <!-- Category Selection and Feedback -->
+    
+    </div>
+
+    <!-- TensorFlow.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <!-- COCO-SSD Model -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+    <!-- External JavaScript for Mapping and Logic -->
+    <script src="scrapCategoryMapping.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

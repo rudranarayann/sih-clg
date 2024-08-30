@@ -1,0 +1,140 @@
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.navbar-brand img {
+    margin-right: 10px;
+}
+
+/* Hero Banner Styles */
+.hero-banner {
+    position: relative;
+    background-image: url('hero-banner.jpg'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    animation: colorChange 10s infinite;
+}
+
+@keyframes colorChange {
+    0% {
+        background-color: #2d572c;
+    }
+    50% {
+        background-color: #3e8e41;
+    }
+    100% {
+        background-color: #2d572c;
+    }
+}
+
+.hero-banner h1 {
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.hero-banner p {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.hero-banner .btn {
+    font-size: 18px;
+    padding: 10px 20px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .hero-banner {
+        height: 40vh;
+        padding: 10px;
+    }
+
+    .hero-banner h1 {
+        font-size: 36px;
+    }
+
+    .hero-banner p {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    .hero-banner .btn {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-banner {
+        height: 30vh;
+    }
+
+    .hero-banner h1 {
+        font-size: 28px;
+    }
+
+    .hero-banner p {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .hero-banner .btn {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+}
+
+/* Information Section Styles */
+.info-section {
+    padding: 60px 0;
+}
+
+.info-card {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.info-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px 10px 0 0;
+}
+
+.features-section {
+    padding: 60px 0;
+}
+
+/* Call to Action Section Styles */
+.cta-section {
+    background-color: #2d572c;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #2d572c;
+    color: white;
+    padding: 20px 0;
+}
+
+.social-icons a {
+    color: white;
+    margin: 0 10px;
+    transition: color 0.3s;
+}
+
+.social-icons a:hover {
+    color: #ddd;
+}

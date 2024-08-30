@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Search</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: darkcyan;
+            font-family: Arial, sans-serif;
+            margin: 5px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        select, input, textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .vendor-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .request-form {
+            margin-top: 20px;
+        }
+        .photo-preview {
+            margin-top: 10px;
+        }
+        .photo-preview img {
+            max-width: 100px;
+            display: block;
+            margin-top: 10px;
+        }
+        .photo-preview p {
+            margin: 5px 0;
+        }
+        #confirmationMessage {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">
+            <img src="s-logo.png" alt="Logo" width="30" height="30" class="d-inline-block align-top">
+            Scrappyfy
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="search.html">Sell</a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="#">Info</a>
+                </li> -->
+                <li class="nav-item">
+                    <a class="nav-link" href="register.html " target="_blank">Vendor Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="map.html" target="_blank" >Location</a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="#">Payment Status</a>
+                </li> -->
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>User Search</h1>
+        
+        <div class="form-group">
+            <label for="userLocation">Select Your Location:</label>
+            <select id="userLocation" onchange="fetchVendors()">
+                <option value="">--Select a location--</option>
+            </select>
+        </div>
+
+        <div class="vendor-list" id="vendorList"></div>
+
+        <div class="request-form" id="requestForm" style="display: none;">
+            <h2>Send Collection Request</h2>
+            <form id="collectionRequestForm">
+                <div class="form-group">
+                    <label for="selectedVendor">Selected Vendor:</label>
+                    <input type="text" id="selectedVendor" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="scrapType">Scrap Type:</label>
+                    <select id="scrapType">
+                        <option value="plastic">Plastic</option>
+                        <option value="glass">Glass</option>
+                        <option value="metal">Metal</option>
+                        <option value="paper">Paper</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity (kg):</label>
+                    <input type="number" id="quantity" min="10">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea id="description"></textarea>
+                </div>
+                <input type="file" id="image-upload" accept="image/*">
+                <br><br>
+                <canvas id="canvas"></canvas>
+                <p id="result"></p>
+                <p id="suggestions"></p>
+
+                <button type="button" onclick="sendRequest()">Send Request</button>
+            </form>
+            <div id="confirmationMessage">Your request has been submitted.</div>
+        </div>
+    </div>
+
+    <script>
+        const locations = {1: 'BBSR', 2: 'Cuttack', 3: 'Puri'};
+
+        function loadVendors() {
+            return JSON.parse(localStorage.getItem('vendors')) || {};
+        }
+
+        function fetchVendors() {
+            const location = document.getElementById('userLocation').value;
+            const vendorList = document.getElementById('vendorList');
+            vendorList.innerHTML = '';
+            
+            if (!location) return;
+
+            const vendors = loadVendors();
+            for (const [id, vendor] of Object.entries(vendors)) {
+                if (vendor.location == location) {
+                    const vendorItem = document.createElement('div');
+                    vendorItem.className = 'vendor-item';
+                    vendorItem.innerHTML = `
+                        <h3>${vendor.name}</h3>
+                        <p>Plastic Price: $${vendor.prices.plastic} per kg</p>
+                        <p>Glass Price: $${vendor.prices.glass} per kg</p>
+                        <p>Metal Price: $${vendor.prices.metal} per kg</p>
+                        <p>Paper Price: $${vendor.prices.paper} per kg</p>
+                        <button onclick="selectVendor('${id}')">Select Vendor</button>
+                    `;
+                    vendorList.appendChild(vendorItem);
+                }
+            }
+        }
+
+        function selectVendor(vendorId) {
+            const vendors = loadVendors();
+            const vendor = vendors[vendorId];
+            document.getElementById('selectedVendor').value = vendorId;
+            document.getElementById('requestForm').style.display = 'block';
+        }
+
+        function sendRequest() {
+            const vendorId = document.getElementById('selectedVendor').value;
+            const scrapType = document.getElementById('scrapType').value;
+            const quantity = document.getElementById('quantity').value;
+            const description = document.getElementById('description').value;
+
+            if (!vendorId || !scrapType || quantity < 10 || !description) {
+                alert('Please fill in all fields with valid information.');
+                return;
+            }
+
+            // Display the confirmation message
+            const confirmationMessage = document.getElementById('confirmationMessage');
+            confirmationMessage.style.display = 'block';
+        }
+
+        function initialize() {
+            const locationSelect = document.getElementById('userLocation');
+            for (const [id, name] of Object.entries(locations)) {
+                locationSelect.innerHTML += `<option value="${id}">${name}</option>`;
+            }
+        }
+
+        initialize();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <!-- COCO-SSD Model -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+    <!-- External JavaScript for Mapping and Logic -->
+    <script src="scrapCategoryMapping.js"></script>
+    <script src="app.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
